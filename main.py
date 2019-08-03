@@ -73,7 +73,8 @@ def dashboard():
 
     return render_template('login.html', params=params)
 
-@app.route("/edit/<string:srno>", methods=['GET','POST'] )
+
+@app.route("/edit/<string:srno>", methods=['GET', 'POST'])
 def edit(srno):
     if ('user' in session and session['user'] == params['username']):
         if request.method == 'POST':
@@ -81,10 +82,11 @@ def edit(srno):
             tagline = request.form.get('tagline')
             slug = request.form.get('slug')
             content = request.form.get('content')
-            img_file =  request.form.get('img_file')
+            img_file = request.form.get('img_file')
 
             if srno == '0':
-                post = Posts(title=box_title, tagline=tagline, slug=slug, content=content, img_file=img_file)
+                post = Posts(title=box_title, tagline=tagline,
+                             slug=slug, content=content, img_file=img_file)
                 db.session.add(post)
                 db.session.commit()
             else:
@@ -97,7 +99,8 @@ def edit(srno):
                 db.session.commit()
                 return redirect('/edit/' + srno)
         post = Posts.query.filter_by(srno=srno).first()
-        return render_template('edit.html', params=params, post=post)
+        return render_template('edit.html', params=params, post=post, srno=srno)
+
 
 @app.route("/contact", methods=['GET', 'POST'])
 def contact():
@@ -110,11 +113,7 @@ def contact():
                          msg=message, date=datetime.now(), email=email)
         db.session.add(entry)
         db.session.commit()
-        # mail.send_message('New message from ' + name,
-        #                   sender=email,
-        #                   recipients = [params['gmail-user']],
-        #                   body = message + "\n" + phone
-        #                   )
+
     return render_template('contact.html', params=params)
 
 
