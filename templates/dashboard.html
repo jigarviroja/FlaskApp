@@ -19,10 +19,12 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-            <h1>Uploads File</h1>
-            <div class="row">
-
-            </div>
+            <h1>Basic Actions</h1>
+            <a href="/edit/0"><button type="button" class="btn btn-primary">Add a New Post</button></a>
+            <a href="/logout"><button type="button" class="btn btn-danger">LogOut</button></a>
+            <hr>
+            <h1>Upload Files</h1>
+            we will upload file here
             <hr>
             <h1>Edit Post</h1>
             <table class="table">
@@ -41,7 +43,8 @@
                         <td>{{post.srno}}</td>
                         <td>{{post.title}}</td>
                         <td>{{post.date}}</td>
-                        <td><button type="button" class="btn btn-primary">Edit</button></td>
+                        <td><a href="/edit/{{post.srno}}"><button type="button"
+                                    class="btn btn-primary">Edit</button></a></td>
                         <td><button type="button" class="btn btn-danger ">Delete</button></td>
 
                     </tr>

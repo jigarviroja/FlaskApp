@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 # from flask_mail import Mail
 import json
@@ -73,6 +73,31 @@ def dashboard():
 
     return render_template('login.html', params=params)
 
+@app.route("/edit/<string:srno>", methods=['GET','POST'] )
+def edit(srno):
+    if ('user' in session and session['user'] == params['username']):
+        if request.method == 'POST':
+            box_title = request.form.get('title')
+            tagline = request.form.get('tagline')
+            slug = request.form.get('slug')
+            content = request.form.get('content')
+            img_file =  request.form.get('img_file')
+
+            if srno == '0':
+                post = Posts(title=box_title, tagline=tagline, slug=slug, content=content, img_file=img_file)
+                db.session.add(post)
+                db.session.commit()
+            else:
+                post = Posts.query.filter_by(srno=srno).first()
+                post.title = box_title
+                post.tagline = tagline
+                post.slug = slug
+                post.content = content
+                post.img_file = img_file
+                db.session.commit()
+                return redirect('/edit/' + srno)
+        post = Posts.query.filter_by(srno=srno).first()
+        return render_template('edit.html', params=params, post=post)
 
 @app.route("/contact", methods=['GET', 'POST'])
 def contact():
