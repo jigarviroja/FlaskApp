@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 # from flask_mail import Mail
 import json
@@ -10,6 +10,7 @@ with open('config.json', 'r') as c:
 
 local_server = True
 app = Flask(__name__)
+app.secret_key = 'super-secret-key'
 
 if(local_server):
     app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
@@ -57,11 +58,20 @@ def about():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+
+    if ('user' in session and session['user'] == params['username']):
+        posts = Posts.query.all()
+        return render_template('dashboard.html', params=params, posts=posts)
+
     if request.method == 'POST':
-        pass
-    # Redirect to admin panel
-    else:
-        return render_template('login.html', params=params)
+        username = request.form.get('uname')
+        userpass = request.form.get('upass')
+        if (username == params['username'] and userpass == params['userpass']):
+            session['user'] = username
+            posts = Posts.query.all()
+            return render_template('dashboard.html', params=params, posts=posts)
+
+    return render_template('login.html', params=params)
 
 
 @app.route("/contact", methods=['GET', 'POST'])
